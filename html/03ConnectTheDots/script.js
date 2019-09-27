@@ -7,59 +7,46 @@ const height = window.innerHeight;
 canvas.width = width;
 canvas.height = height;
 
-let points = [];
-let maxpoints = 4;
-let counter = 0;
-let hit = 0;
+let balls = [];
 
-
-for(let i=0; i<maxpoints; i++){
-  addPoint("rgba(10,10,20,0.2)");
+function resetBalls()
+{
+  balls = [];
 }
 
-let mouse = new Vector2d();
-let difference = new Vector2d();
-
-window.addEventListener('click',(e)=>{
-  mouse.dx = e.clientX;
-  mouse.dy = e.clientY;
-  for (var i = 0; i < points.length; i++) {
-    difference.differenceVector(points[i].position,);
-     if(difference.magnitude<points[i].radius){
-       points[i].color = "blue"; 
-       hit++;
-     };
-   }
-  if(hit>= maxpoints){
-    hit = 0;
-    counter = 0;
-    points.splice(0,maxpoints)
-    for (var i = 0; i<maxpoints; i++) {
-      addPoint("rgba("+ getRandomNmr(255)+","+getRandomNmr(255)+","+getRandomNmr(255)+ "," +0.2+ ")");
-    }
-  }
-})
-
-function animate() {
-  context.clearRect(0,0,width,height);
-  requestAnimationFrame(animate);
-  for(let i = 0; i<points.length; i++){
-    points[i].draw(context);
-  }
-}
-
-animate()
-
+setInterval(resetBalls, 5000);
 
 function getRandomNmr(max){
   let ans = Math.floor(Math.random()*max);
   return ans;
 }
 
-function addPoint(color){
-  let A = new Point(new Vector2d(getRandomNmr(width),getRandomNmr(height)),getRandomNmr(125),color,"hallos");
-  A.label = counter;
-  counter++;
-  points.push(A);
+function animate() 
+{
+  context.clearRect(0,0,width,height);
+  requestAnimationFrame(animate);
+  if(balls.length < 4) 
+  {
+  let ball = new Point(new Vector2d(getRandomNmr(width), getRandomNmr(height)), 10);
+  balls.push(ball);
+  }
+  context.beginPath();
+  context.moveTo(balls[0].position.dx, balls[0].position.dy);
+
+  for (let i = 0; i < balls.length; i++) 
+  {
+    context.lineTo(balls[i].position.dx, balls[i].position.dy);
+    context.fillStyle = "rgba(127,20,210,0.1)";
+    context.strokeStyle = "crimson";
+  }
+  context.closePath();
+  context.fill();
+  context.stroke();
+
+  for (let i = 0; i < balls.length; i++) {
+    balls[i].draw(context);
+    balls[i].label = i + 1;
+  }
 }
 
+animate()
