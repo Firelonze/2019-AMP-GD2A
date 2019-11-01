@@ -7,7 +7,7 @@ const height = window.innerHeight;
 canvas.width = width;
 canvas.height = height;
 
-let grid = new Grid();
+let arrow = new Arrow();
 
 
 function animate() {
